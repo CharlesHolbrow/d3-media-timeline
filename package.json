@@ -32,11 +32,14 @@
     "uglify-es": "^3.3.9"
   },
   "dependencies": {
-    "eventemitter3": "^4.0.0",
-    "kefir": "^3.8.6",
+    "d3-axis": "^1.0.12",
     "d3-scale": "^3.2.1",
     "d3-selection": "^1.4.1",
     "d3-time": "^1.1.0",
-    "d3-time-format": "^2.2.3"
+    "d3-time-format": "^2.2.3",
+    "d3-zoom": "^1.8.3",
+    "eventemitter3": "^4.0.0",
+    "kefir": "^3.8.6",
+    "marked": "^0.8.0"
   }
 }

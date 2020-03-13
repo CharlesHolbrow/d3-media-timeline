@@ -1,4 +1,7 @@
 import Emitter from 'eventemitter3';
+import { zoom as d3Zoom, zoomIdentity } from 'd3-zoom';
+import { scaleLinear as d3ScaleLinear } from 'd3-scale';
+import { axisRight as d3AxisRight, axisBottom as d3AxisBottom } from 'd3-axis';
 import { formatYear, formatMonth, formatMonthDay } from './utils.mjs';
 import { timeYear } from 'd3-time';
 import Timeline from './timeline.mjs';
@@ -22,7 +25,7 @@ export default class MasterTimeline {
     this.drawDebugAxes = !!drawDebugAxes;
     this.emitter = new Emitter();
     this.content = {};
-    this.lastZoomTransform = d3.zoomIdentity;
+    this.lastZoomTransform = zoomIdentity;
     this.svg = this.parent.append('svg')
       .attr('class', 'media-timeline');
 
@@ -32,10 +35,10 @@ export default class MasterTimeline {
     this.g = this.svg.append('g')
       .attr('class', 'master-timeline');
     this.yScaleInitial = 
-    this.yScale = d3.scaleLinear()
+    this.yScale = d3ScaleLinear()
       .domain([1850, 2050])     // Domain is in 'float years'
       .range([0, this.height]); // Range is in pixels.
-    this.yAxis = d3.axisRight(this.yScale)
+    this.yAxis = d3AxisRight(this.yScale)
       .ticks(10)
       .tickSizeOuter(0);
     this.yAxisGroup = this.svg.append('g')
@@ -43,10 +46,10 @@ export default class MasterTimeline {
       .attr('transform', 'translate(0,0)')
 
     this.xScaleInitial =
-    this.xScale = d3.scaleLinear()
+    this.xScale = d3ScaleLinear()
       .domain([0, this.width])
       .range([0, this.width])
-    this.xAxis = d3.axisBottom(this.xScale)
+    this.xAxis = d3AxisBottom(this.xScale)
       .ticks(10)
       .tickSizeOuter(0);
     this.xAxisGroup = this.svg.append('g')
@@ -56,7 +59,7 @@ export default class MasterTimeline {
     // Configure Zooming and Panning. Note that because events will never
     // trigger both zoom and a drag handlers, I am extracting drag behavior from
     // zoom events.
-    this.zoom = d3.zoom()
+    this.zoom = d3Zoom()
       .filter(() => !d3.event.button)
       .wheelDelta(() => {
         // Browsers have agreed to emit zoom events with the ctrlKey down on a
