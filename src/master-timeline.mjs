@@ -1,9 +1,8 @@
 import Emitter from 'eventemitter3';
-import { zoom as d3Zoom, zoomIdentity } from 'd3-zoom';
-import { scaleLinear as d3ScaleLinear } from 'd3-scale';
-import { axisRight as d3AxisRight, axisBottom as d3AxisBottom } from 'd3-axis';
+
+import * as d3 from './d3.mjs';
 import { formatYear, formatMonth, formatMonthDay } from './utils.mjs';
-import { timeYear } from 'd3-time';
+
 import Timeline from './timeline.mjs';
 import Popup from './popup.mjs';
 import Player from './player.mjs';
@@ -25,7 +24,7 @@ export default class MasterTimeline {
     this.drawDebugAxes = !!drawDebugAxes;
     this.emitter = new Emitter();
     this.content = {};
-    this.lastZoomTransform = zoomIdentity;
+    this.lastZoomTransform = d3.zoomIdentity;
     this.svg = this.parent.append('svg')
       .attr('class', 'media-timeline');
 
@@ -35,10 +34,10 @@ export default class MasterTimeline {
     this.g = this.svg.append('g')
       .attr('class', 'master-timeline');
     this.yScaleInitial = 
-    this.yScale = d3ScaleLinear()
+    this.yScale = d3.scaleLinear()
       .domain([1850, 2050])     // Domain is in 'float years'
       .range([0, this.height]); // Range is in pixels.
-    this.yAxis = d3AxisRight(this.yScale)
+    this.yAxis = d3.axisRight(this.yScale)
       .ticks(10)
       .tickSizeOuter(0);
     this.yAxisGroup = this.svg.append('g')
@@ -46,10 +45,10 @@ export default class MasterTimeline {
       .attr('transform', 'translate(0,0)')
 
     this.xScaleInitial =
-    this.xScale = d3ScaleLinear()
+    this.xScale = d3.scaleLinear()
       .domain([0, this.width])
       .range([0, this.width])
-    this.xAxis = d3AxisBottom(this.xScale)
+    this.xAxis = d3.axisBottom(this.xScale)
       .ticks(10)
       .tickSizeOuter(0);
     this.xAxisGroup = this.svg.append('g')
@@ -59,7 +58,7 @@ export default class MasterTimeline {
     // Configure Zooming and Panning. Note that because events will never
     // trigger both zoom and a drag handlers, I am extracting drag behavior from
     // zoom events.
-    this.zoom = d3Zoom()
+    this.zoom = d3.zoom()
       .filter(() => !d3.event.button)
       .wheelDelta(() => {
         // Browsers have agreed to emit zoom events with the ctrlKey down on a
@@ -280,8 +279,8 @@ const formatSmart = function(date) {
 }
 
 const styles = [
-  { ticks: timeYear.every(10), eventFormat: formatYear },
-  { ticks: timeYear.every(1),  eventFormat: formatSmart },
+  { ticks: d3.timeYear.every(10), eventFormat: formatYear },
+  { ticks: d3.timeYear.every(1),  eventFormat: formatSmart },
 ];
 
 const getStyle = (pixelsPerYear) => {

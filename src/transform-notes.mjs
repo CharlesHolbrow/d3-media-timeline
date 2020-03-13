@@ -9,7 +9,30 @@ renderer.link = function(href, title, text) {
 };
 marked.setOptions({ renderer: renderer });
 
-export default function(data) {
+
+/**
+ * Generates `.html` fields for raw timeline event data.
+ *
+ * Timeline Events typically go through two stages of processing before they can
+ * be rendered. This is the first stage, and is designed to be called during the
+ * build process (not in the browser). As such, all input and output data must
+ * be JSON serializable.
+ *
+ * Each event in the array returned by this method will have a `.html` field,
+ * which is generated from the and `.details` markdown field in conjunction with
+ * any `.audio`, `.video`,  `.image.url` fields.
+ *
+ * If node.js' process.env.BUILD environment variable is `public`, the output
+ * data will also be stripped of any `.audio` and `.video` objects that do not
+ * have a truthy `.publishable` field. This allows you to maintain separate
+ * builds that omit copyrighted content, in the event that you are publishing
+ * to the web.
+ *
+ * @param {Object[]} data An array of JSON serializable objects typically read
+ *  from a JSON or YAML file.
+ * @returns {Object[]} An array of JSON serializable objects
+ */
+export function populateHtmlFields(data) {
   // This method is only designed for objects
   if (Array.isArray(data)) return data;
   for (const [title, obj] of Object.entries(data)) {
@@ -30,7 +53,7 @@ export default function(data) {
     //
     // encodeURI() escapes double quotes, but not single quotes
     if (imageUrl) obj.html += `<img src="${encodeURI(imageUrl)}"/>`;
-    if (obj.detail)   obj.html += marked(obj.detail);
+    if (obj.detail) obj.html += marked(obj.detail);
   }
   return data;
 }

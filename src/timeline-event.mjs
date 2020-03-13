@@ -1,9 +1,8 @@
-import { timeParse } from 'd3-time-format';
-import { select } from 'd3-selection';
+import * as d3 from './d3.mjs';
 
-const parseYearMonthDay = timeParse('%Y-%m-%d');
-const parseYearMonth = timeParse('%Y-%m');
-const parseYear = timeParse('%Y');
+const parseYearMonthDay = d3.timeParse('%Y-%m-%d');
+const parseYearMonth = d3.timeParse('%Y-%m');
+const parseYear = d3.timeParse('%Y');
 
 export default class TimelineEvent {
   /**
@@ -47,7 +46,7 @@ export default class TimelineEvent {
   getNode() {
     if (this.node instanceof Node) return this.node;
     this.node = document.createElement('div')
-    this.selection = select(this.node)
+    this.selection = d3.select(this.node)
       .attr('class', 'detail')
       .html(this.html)
       .style('max-width', () => this.popupMaxWidth || null)
@@ -60,7 +59,7 @@ export default class TimelineEvent {
       this.playPool.plug(this.videoPlayStream);
       this.pausePool.plug(this.videoPauseStream);
 
-      select(this.videoElement)
+      d3.select(this.videoElement)
         .attr('controls', true)
         .attr('loop', () => this.video.loop ? true : null)
         .property('volume', () => typeof this.video.volume === 'number' ? this.video.volume : null)
@@ -80,7 +79,7 @@ export default class TimelineEvent {
       this.playPool.plug(this.audioPlayStream);
       this.pausePool.plug(this.audioPauseStream);
 
-      select(this.audioElement)
+      d3.select(this.audioElement)
         .attr('loop', () => this.audio.loop ? true : null)
         .property('volume', () => typeof this.audio.volume === 'number' ? this.audio.volume : null)
         .append('source')

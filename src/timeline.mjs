@@ -1,7 +1,4 @@
-import { scaleTime as d3ScaleTime } from 'd3-scale';
-import { axisRight as d3AxisRight, axisLeft as d3AxisLeft } from 'd3-axis';
-import { timeYear as d3TimeYear } from 'd3-time';
-
+import * as d3 from './d3.mjs';
 import { dateToYearFloat, yearFloatToDate } from './utils.mjs';
 import Emitter from 'eventemitter3';
 
@@ -56,20 +53,20 @@ export default class Timeline {
       .attr('text-anchor', 'end')
 
     // Convert Date to pixel position
-    this.yScale = d3ScaleTime()
+    this.yScale = d3.scaleTime()
       .domain([config.start, config.end])
       .range([0, 100])
 
     // yAxis is for consistent ticks every 10 or 100 years
-    this.yAxis = d3AxisLeft(this.yScale)
-      .ticks(d3TimeYear.every(10))
+    this.yAxis = d3.axisLeft(this.yScale)
+      .ticks(d3.timeYear.every(10))
       .tickSizeOuter(0)
     this.yAxisGroup = this.gOuter.append('g')
       .attr('class', 'timeline-y-axis')
       .call(this.yAxis)
 
     // eventAxis if for event ticks
-    this.eventAxis = d3AxisRight(this.yScale)
+    this.eventAxis = d3.axisRight(this.yScale)
       .tickSizeOuter(0)
     this.eventAxisGroup = this.gOuter.append('g')
       .attr('class', 'timeline-event-axis')
