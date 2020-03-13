@@ -1,0 +1,9 @@
+{
+  "plugins": [
+    ["@babel/plugin-transform-classes", {}],
+  ],
+  "presets":
+  [
+    ["@babel/preset-env", { "targets": "> 2.00%, not dead"} ]
+  ]
+}
