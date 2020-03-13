@@ -1,3 +1,4 @@
+import TimelineEvent from './timeline-event.mjs';
 import marked from 'marked';
 
 // Links should open in a new tab. Implementation comes from here:
@@ -28,13 +29,15 @@ marked.setOptions({ renderer: renderer });
  * builds that omit copyrighted content, in the event that you are publishing
  * to the web.
  *
- * @param {Object[]} data An array of JSON serializable objects typically read
- *  from a JSON or YAML file.
- * @returns {Object[]} An array of JSON serializable objects
+ * @param {Object} data A json serializable object typically read from a JSON
+ *   or YAML file. Each entry should represent one timeline event.
+ * @returns {Object} A JSON serializable object wherein each entry represent one
+ *   timeline event.
  */
-export function populateHtmlFields(data) {
-  // This method is only designed for objects
-  if (Array.isArray(data)) return data;
+function populateHtmlFields(data) {
+  if (Array.isArray(data))
+    throw new Error('populate html fields expects an object, not an array');
+
   for (const [title, obj] of Object.entries(data)) {
     // remove and video that is not publishable (possibly due to copyright)
     if (process.env.BUILD === 'public') {
@@ -56,4 +59,32 @@ export function populateHtmlFields(data) {
     if (obj.detail) obj.html += marked(obj.detail);
   }
   return data;
+}
+
+/**
+ * Convert a JSON serializable object containing entries to an array of
+ * TimelineEvent objects.
+ *
+ * Timeline Events typically go through two stages of processing before they can
+ * be rendered. This is the second stage, which runs in the browser.
+ *
+ * TimelineEvent objects cannot be serialized to JSON, so this must be called
+ * only in the browser (not during the build).
+ *
+ * @param {Object} data A single JSON object wherein each entry represents a
+ *   TimelineEvent serialized in raw JSON.
+ * @returns {TimelineEvent[]} TimelineEvent objects, sorted by date
+ */
+function createTimelineEvents(data) {
+  const contentArray = [];
+  for (let [key, value] of Object.entries(data)) {
+    value.title = value.title || key; // if .title not provided, use object key
+    contentArray.push(new TimelineEvent(value));
+  }
+  return contentArray.sort((d1, d2) => d1.date - d2.date);
+}
+
+export {
+  populateHtmlFields,
+  createTimelineEvents,
 }

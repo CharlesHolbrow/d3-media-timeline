@@ -6,6 +6,8 @@ const parseYear = d3.timeParse('%Y');
 
 export default class TimelineEvent {
   /**
+   * Construct a TimelineEvent from a serializable JSON object.
+   * Parse date, and add `.datePrecision` to both the datum and the `.date`
    * @param {Object} d - This is the datum that is derived from our content
    *        yaml files. It should already have a .title added.
    */
