@@ -1,6 +1,6 @@
 {
   "name": "d3-media-timeline",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Timeline GUI with contextual zoom interface",
   "keywords": [
     "d3",
