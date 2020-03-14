@@ -12,7 +12,8 @@ marked.setOptions({ renderer: renderer });
 
 
 /**
- * Generates `.html` fields for raw timeline event data.
+ * Generates `.html` fields for raw timeline data. This should be called by
+ * rollup in the build stage of your timeline application.
  *
  * Timeline Events typically go through two stages of processing before they can
  * be rendered. This is the first stage, and is designed to be called during the
@@ -30,9 +31,10 @@ marked.setOptions({ renderer: renderer });
  * to the web.
  *
  * @param {Object} data A json serializable object typically read from a JSON
- *   or YAML file. Each entry should represent one timeline event.
- * @returns {Object} A JSON serializable object wherein each entry represent one
- *   timeline event.
+ *   or YAML file. Each entry in the object should represent one timeline event.
+ * @returns {Object} A JSON serializable object wherein each entry represents
+ *   timeline event. This will be the same object that was passed in, albeit
+ *   with mutated fields.
  */
 function populateHtmlFields(data) {
   if (Array.isArray(data))

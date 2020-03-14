@@ -227,9 +227,19 @@ export default class MasterTimeline {
   }
 
   /**
-   * Add a timeline
+   * Create and add a timeline.
+   *
+   * ```JavaScript
+   * master.addTimeline('Radio Technology', data, {
+   *  start: new Date(1800, 0, 1),
+   *  end: new Date(2020, 0, 1),
+   * });
+   * ```
+   *
    * @param {String} name - name of the timeline
    * @param {Object} data - timeline data
+   * @param {Object} [options] optional configuration object which will be
+   *   passed in to the Timeline constructor
    */
   addTimeline(name, data, options) {
     options = options || {};
@@ -276,7 +286,7 @@ const formatSmart = function(date) {
   if (!date.precision || date.precision === 'day') return formatMonthDay(date);
   if (date.precision === 'year') return formatYear(date);
   if (date.precision === 'month') return formatMonth(date);
-}
+};
 
 const styles = [
   { ticks: d3.timeYear.every(10), eventFormat: formatYear },
