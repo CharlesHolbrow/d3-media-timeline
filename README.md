@@ -25,7 +25,7 @@ Configuring a repo takes several steps. Once configured, it is very easy to add 
 
 Some of the technologies involved include:
 
-- [`rollup.js`](https://rollupjs.org)
+- [rollup.js](https://rollupjs.org)
 - [@rollup/plugin-yaml npm package](https://github.com/rollup/plugins/tree/master/packages/yaml), which is configured using the `transform` feature in the rollup configuration `{ plugins: [ yaml({ transform: populateHtmlFields })] }`
 - [babel.js](https://babeljs.io/)
 
@@ -40,7 +40,7 @@ Setting up a timeline application like the [opera-timeline](https://github.com/m
 - Rollup.js configuration (see opera-timeline example)
 - CSS to configure style (see opera-timeline example)
 
-```JavaScript
+```javascript
 import { MasterTimeline, d3, createTimelineEvents } from 'd3-media-timeline';
 
 // Load content from a yaml file.
